@@ -2,24 +2,24 @@ import {defineStore} from "pinia";
 import {login, registration} from "@/rsocker/rsocket";
 import {NewUser} from "@/components/interfaces/NewUser";
 import {LogUser} from "@/components/interfaces/LogUser";
-import {UserId} from "@/components/interfaces/UserId";
+import {Profile} from "@/components/interfaces/Profile";
 
 export const useUserStore = defineStore({
     id: "userStore",
     state: () =>
         ({
-            profile: {} as UserId,
+            profile: {} as Profile,
         }),
     actions: {
         async registration(user: NewUser): Promise<void> {
             if (!user) return;
 
             await registration({
-                name: user.name,
+                userName: user.userName,
                 email: user.email,
                 password: user.password
-            }).then((response: any) => {
-                this.profile = response.userId;
+            }).then((response: Profile) => {
+                this.profile = response;
             }).catch((error) => {
                 console.error(error);
             });
@@ -30,15 +30,14 @@ export const useUserStore = defineStore({
             await login({
                 email: user.email,
                 password: user.password
-            }).then((response: any) => {
-                this.profile = response.userId;
+            }).then((response: Profile) => {
+                this.profile = response;
             }).catch((error) => {
                 console.error(error);
             });
         },
         logout(): void {
-            this.profile = {id: ""}
-            console.error(this.profile);
+            this.profile = {} as Profile;
         }
     },
 });

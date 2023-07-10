@@ -3,7 +3,7 @@
     <h4>Creating user: </h4>
     <my-input
         v-focus
-        v-model="user.name"
+        v-model="user.userName"
         type="text"
         placeholder="name"
     />
@@ -35,14 +35,14 @@ export default class UserForm extends Vue {
   @Prop() readonly userProps!: NewUser;
 
   user = {
-    name: '',
+    userName: '',
     email: '',
     password: ''
   };
 
   createUser(): void {
     this.$emit('create', this.user);
-    this.user.name = '';
+    this.user.userName = '';
     this.user.email = '';
     this.user.password = '';
   }

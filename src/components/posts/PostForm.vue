@@ -34,6 +34,13 @@ export default class PostForm extends Vue {
     body: '',
   };
 
+  created() {
+    if (this.post) {
+      this.newPost.title = this.post.title;
+      this.newPost.body = this.post.body;
+    }
+  }
+
   createPost(): void {
     this.$emit('create', this.newPost);
     this.newPost.title = '';

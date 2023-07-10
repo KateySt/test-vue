@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <div v-if="!auth">
+    <div v-if="!user.userId">
       <my-button
           @click="showLogin"
           style="margin: 15px 0;"
@@ -25,18 +25,18 @@
       </my-dialog>
     </div>
 
-    <div v-if="auth">
-      <my-button
-          @click="logout"
-          style="margin: 15px 0;"
-      >
-        Logout
-      </my-button>
-    </div>
+    <my-button
+        v-if="user.userId"
+        @click="logout"
+        style="margin: 15px 0;"
+    >
+      Logout
+    </my-button>
 
-    <my-button v-if="auth"
-               @click="showDialog"
-               style="margin: 15px 0;"
+    <my-button
+        v-if="user.userId"
+        @click="showDialog"
+        style="margin: 15px 0;"
     >
       Creat post
     </my-button>
@@ -46,16 +46,20 @@
       />
     </my-dialog>
 
-
     <post-list
         :posts="post"
+        :userId="user.userId"
         @update="openUpdatePost"
+        v-if="!isPostLoading"
     />
+    <div v-else-if="isPostLoading">Loading...</div>
 
-
-    <my-dialog v-model:show="dialogUpdate">
+    <my-dialog
+        v-model:show="dialogUpdate"
+    >
       <post-form
           @create="changePost"
+          :post="oldPost"
       />
     </my-dialog>
 
@@ -84,33 +88,47 @@ import MyButton from "@/components/UI/MyButton.vue";
     PostForm
   }
 })
-export default class extends Vue {
+export default class App extends Vue {
   post = usePostsStore().posts;
-  user = useUserStore().profile;
-  auth = false;
+  user = {};
   dialog = false;
   dialogUpdate = false;
   dialogAuthLog = false;
   dialogAuthReg = false;
-  postId = '';
+  isPostLoading = false;
+  oldPost: Post = {
+    postId: "",
+    title: "",
+    body: "",
+    dateCreated: "",
+    userId: ""
+  };
 
-  createPost(post: Post) {
-    usePostsStore().createPost(this.user.id, post);
+  async createPost(post: Post) {
+    await usePostsStore().createPost(useUserStore().profile.userId, post);
+    this.post = usePostsStore().posts;
     this.dialog = false;
+
   }
 
-  openUpdatePost(postId: string) {
-    this.postId = postId;
-    this.dialogUpdate = true;
+  openUpdatePost(post: Post) {
+    this.oldPost = post;
+    if (post.userId === useUserStore().profile.userId) {
+      this.dialogUpdate = true;
+    }
   }
 
-  changePost(post: Post) {
-    usePostsStore().updatePost(this.user.id, this.postId, post);
+  async changePost(post: Post) {
+    await usePostsStore().updatePost(useUserStore().profile.userId, this.oldPost.postId, post);
+    this.post = usePostsStore().posts;
     this.dialogUpdate = false;
   }
 
-  mounted() {
-    usePostsStore().getListPost()
+  async mounted() {
+    this.isPostLoading = true;
+    await usePostsStore().getListPost();
+    this.post = usePostsStore().posts;
+    this.isPostLoading = false;
   }
 
   showDialog() {
@@ -125,21 +143,21 @@ export default class extends Vue {
     this.dialogAuthReg = true;
   }
 
-  createUser(user: NewUser) {
-    useUserStore().registration(user);
+  async createUser(user: NewUser) {
+    await useUserStore().registration(user);
+    this.user = useUserStore().profile;
     this.dialogAuthReg = false;
-    this.auth = true;
   }
 
-  loginUser(user: LogUser) {
-    useUserStore().login(user);
+  async loginUser(user: LogUser) {
+    await useUserStore().login(user);
+    this.user = useUserStore().profile;
     this.dialogAuthLog = false;
-    this.auth = true;
   }
 
   logout() {
-    useUserStore().logout()
-    this.auth = false;
+    useUserStore().logout();
+    this.user = useUserStore().profile;
   }
 }
 </script>

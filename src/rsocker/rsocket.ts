@@ -2,9 +2,9 @@ import {IdentitySerializer, JsonSerializer, RSocketClient} from 'rsocket-core';
 import RSocketWebsocketClient from 'rsocket-websocket-client';
 import {LogUser} from "@/components/interfaces/LogUser";
 import {NewUser} from "@/components/interfaces/NewUser";
-import {User} from "@/components/interfaces/User";
 import {Post} from "@/components/interfaces/Post";
 import {NewPost} from "@/components/interfaces/NewPost";
+import {Profile} from "@/components/interfaces/Profile";
 
 async function connect() {
     const transportOptions = {
@@ -29,13 +29,13 @@ async function connect() {
     return await client.connect();
 }
 
-export async function registration(user: NewUser): Promise<User> {
+export async function registration(user: NewUser): Promise<Profile> {
     const rsocket = await connect();
 
     return new Promise((resolve, reject) => {
         return rsocket.requestResponse({
             data: {
-                userName: user.name,
+                userName: user.userName,
                 email: user.email,
                 password: user.password
             },
@@ -48,14 +48,11 @@ export async function registration(user: NewUser): Promise<User> {
             onError: (error) => {
                 reject(error);
             },
-            onSubscribe: (cancel) => {
-                console.error(cancel);
-            },
         });
     })
 }
 
-export async function login(user: LogUser): Promise<User> {
+export async function login(user: LogUser): Promise<Profile> {
     const rsocket = await connect();
 
     return new Promise((resolve, reject) => {
@@ -72,9 +69,6 @@ export async function login(user: LogUser): Promise<User> {
             },
             onError: (error) => {
                 reject(error);
-            },
-            onSubscribe: (cancel) => {
-                console.error(cancel);
             },
         });
     })
@@ -123,9 +117,6 @@ export async function createPost(id: string, post: NewPost): Promise<Post> {
             onError: (error) => {
                 reject(error);
             },
-            onSubscribe: (cancel) => {
-                console.error(cancel);
-            },
         });
     })
 }
@@ -147,9 +138,6 @@ export async function changePost(userId: string, postId: string, post: NewPost):
             },
             onError: (error) => {
                 reject(error);
-            },
-            onSubscribe: (cancel) => {
-                console.error(cancel);
             },
         });
     })

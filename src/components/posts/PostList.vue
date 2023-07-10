@@ -1,18 +1,17 @@
 <template>
-  <div v-if="posts.length > 0">
+  <div v-if="posts.length>0">
     <h3>List posts</h3>
     <transition-group name="user-list">
       <post-item
           v-for="post in posts"
           :post="post"
+          :userId="userId"
           :key="post.postId"
-          @click="$emit('update', post.postId)"
+          @click="$emit('update', post)"
       />
     </transition-group>
   </div>
-  <h2 v-else style="color: red">
-    List post is empty
-  </h2>
+  <div v-else><strong>Number of posts:</strong> {{ posts.length }}</div>
 </template>
 
 <script lang="ts">
@@ -26,6 +25,7 @@ import {Component, Prop, Vue} from "vue-facing-decorator";
 })
 export default class PostList extends Vue {
   @Prop() readonly posts!: [];
+  @Prop() readonly userId!: string;
 }
 </script>
 

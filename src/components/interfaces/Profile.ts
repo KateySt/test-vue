@@ -1,6 +1,5 @@
-export interface User {
+export interface Profile {
     userId: string;
     userName: string;
     email: string;
-    password: string;
 }

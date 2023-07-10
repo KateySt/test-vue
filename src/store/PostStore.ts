@@ -18,7 +18,7 @@ export const usePostsStore = defineStore({
                     body: post.body
                 })
                 .then((response: Post) => {
-                    this.posts.push(response);
+                    this.posts.unshift(response);
                 })
                 .catch((error) => {
                     console.error(error);
@@ -45,7 +45,7 @@ export const usePostsStore = defineStore({
         async getListPost(): Promise<void> {
             await posts()
                 .then((response: Post[]) => {
-                    this.posts = response;
+                    this.posts = [...response];
                 })
                 .catch((error) => {
                     console.error(error);
