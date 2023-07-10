@@ -45,7 +45,6 @@
           @create="createPost"
       />
     </my-dialog>
-
     <post-list
         :posts="post"
         :userId="user.userId"
@@ -78,6 +77,7 @@ import UserLogForm from "@/components/user/UserLogForm.vue";
 import {NewUser} from "@/components/interfaces/NewUser";
 import {LogUser} from "@/components/interfaces/LogUser";
 import MyButton from "@/components/UI/MyButton.vue";
+import {Profile} from "@/components/interfaces/Profile";
 
 @Component({
   components: {
@@ -89,20 +89,14 @@ import MyButton from "@/components/UI/MyButton.vue";
   }
 })
 export default class App extends Vue {
-  post = usePostsStore().posts;
-  user = {};
+  post: Post[] = usePostsStore().posts;
+  user = {} as Profile;
   dialog = false;
   dialogUpdate = false;
   dialogAuthLog = false;
   dialogAuthReg = false;
   isPostLoading = false;
-  oldPost: Post = {
-    postId: "",
-    title: "",
-    body: "",
-    dateCreated: "",
-    userId: ""
-  };
+  oldPost = {} as Post;
 
   async createPost(post: Post) {
     await usePostsStore().createPost(useUserStore().profile.userId, post);
