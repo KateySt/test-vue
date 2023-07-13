@@ -9,9 +9,10 @@
   },
   "dependencies": {
     "pinia": "^2.1.4",
-    "rsocket-core": "^0.0.27",
-    "rsocket-tcp-client": "^0.0.27",
-    "rsocket-websocket-client": "^0.0.27",
+    "rsocket-composite-metadata": "^1.0.0-alpha.3",
+    "rsocket-core": "^1.0.0-alpha.3",
+    "rsocket-messaging": "^1.0.0-alpha.3",
+    "rsocket-websocket-client": "^1.0.0-alpha.3",
     "vue": "^3.2.13",
     "vue-facing-decorator": "^2.1.20"
   },

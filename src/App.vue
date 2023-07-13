@@ -78,6 +78,7 @@ import {NewUser} from "@/components/interfaces/NewUser";
 import {LogUser} from "@/components/interfaces/LogUser";
 import MyButton from "@/components/UI/MyButton.vue";
 import {Profile} from "@/components/interfaces/Profile";
+import {NewPost} from "@/components/interfaces/NewPost";
 
 @Component({
   components: {
@@ -98,11 +99,14 @@ export default class App extends Vue {
   isPostLoading = false;
   oldPost = {} as Post;
 
-  async createPost(post: Post) {
-    await usePostsStore().createPost(useUserStore().profile.userId, post);
+  async createPost(post: NewPost) {
+    await usePostsStore().createPost({
+      title: post.title,
+      body: post.body,
+      authorId: this.user.userId,
+    });
     this.post = usePostsStore().posts;
     this.dialog = false;
-
   }
 
   openUpdatePost(post: Post) {
@@ -113,7 +117,13 @@ export default class App extends Vue {
   }
 
   async changePost(post: Post) {
-    await usePostsStore().updatePost(useUserStore().profile.userId, this.oldPost.postId, post);
+    await usePostsStore().updatePost({
+      postId: this.oldPost.postId,
+      title: post.title,
+      body: post.body,
+      userId: this.oldPost.userId,
+      dateCreated: this.oldPost.dateCreated
+    });
     this.post = usePostsStore().posts;
     this.dialogUpdate = false;
   }

@@ -1,8 +1,10 @@
 import {defineStore} from "pinia";
-import {login, registration} from "@/rsocker/rsocket";
 import {NewUser} from "@/components/interfaces/NewUser";
 import {LogUser} from "@/components/interfaces/LogUser";
 import {Profile} from "@/components/interfaces/Profile";
+import {WS} from "@/rsocker";
+import RegistUserController from "@/rsocker/controller/RegistUserController";
+import LoginController from "@/rsocker/controller/LoginController";
 
 export const useUserStore = defineStore({
     id: "userStore",
@@ -14,12 +16,12 @@ export const useUserStore = defineStore({
         async registration(user: NewUser): Promise<void> {
             if (!user) return;
 
-            await registration({
+            await WS.process(RegistUserController, {
                 userName: user.userName,
                 email: user.email,
                 password: user.password
-            }).then((response: Profile) => {
-                this.profile = response;
+            }).then(user => {
+                this.profile = user;
             }).catch((error) => {
                 console.error(error);
             });
@@ -27,11 +29,11 @@ export const useUserStore = defineStore({
         async login(user: LogUser): Promise<void> {
             if (!user) return;
 
-            await login({
+            await WS.process(LoginController, {
                 email: user.email,
                 password: user.password
-            }).then((response: Profile) => {
-                this.profile = response;
+            }).then(user => {
+                this.profile = user;
             }).catch((error) => {
                 console.error(error);
             });

@@ -1,11 +1,4 @@
-import {IdentitySerializer, JsonSerializer, RSocketClient} from 'rsocket-core';
-import RSocketWebsocketClient from 'rsocket-websocket-client';
-import {LogUser} from "@/components/interfaces/LogUser";
-import {NewUser} from "@/components/interfaces/NewUser";
-import {Post} from "@/components/interfaces/Post";
-import {NewPost} from "@/components/interfaces/NewPost";
-import {Profile} from "@/components/interfaces/Profile";
-
+/*
 async function connect() {
     const transportOptions = {
         url: 'ws://localhost:7000/rsocket',
@@ -142,3 +135,5 @@ export async function changePost(userId: string, postId: string, post: NewPost):
         });
     })
 }
+
+ */
