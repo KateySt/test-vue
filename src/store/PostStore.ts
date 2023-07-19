@@ -6,6 +6,7 @@ import SubscribePosts from "@/rsocker/controller/SubscribePosts";
 import CreatePostController from "@/rsocker/controller/CreatePostController";
 import UpdatePostController from "@/rsocker/controller/UpdatePost";
 import {NewPost} from "@/components/interfaces/NewPost";
+import {useUserStore} from "@/store/UserStore";
 
 export const usePostsStore = defineStore({
     id: "postsStore",
@@ -15,6 +16,7 @@ export const usePostsStore = defineStore({
         } as PostState),
     actions: {
         async createPost(post: NewPost): Promise<void> {
+            WS.setBearerAuthentication(useUserStore().profile.token)
             await WS.process(CreatePostController, {
                 authorId: post.authorId,
                 title: post.title,
@@ -27,6 +29,7 @@ export const usePostsStore = defineStore({
         },
         async updatePost(post: Post): Promise<void> {
             const index = this.findIndexById(post.postId);
+            WS.setBearerAuthentication(useUserStore().profile.token)
             await WS.process(UpdatePostController, {
                 postId: post.postId,
                 authorId: post.userId,
@@ -42,8 +45,11 @@ export const usePostsStore = defineStore({
             return this.posts.findIndex((post: Post) => post.postId === id);
         },
         async getListPost(): Promise<void> {
-            await WS.process(SubscribePosts, null, data => {
-                this.posts.push(data)
+            this.posts = []
+            await WS.process(SubscribePosts, null,data => {
+                if (!data._isComplete) {
+                    this.posts.push(data);
+                }
             }).then(requester => requester.request(100000))
                 .catch((error) => {
                     console.error(error);

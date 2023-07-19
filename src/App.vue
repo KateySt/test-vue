@@ -1,6 +1,6 @@
 <template>
   <div class="app">
-    <div v-if="!user.userId">
+    <div v-if="!user.token">
       <my-button
           @click="showLogin"
           style="margin: 15px 0;"
@@ -26,7 +26,7 @@
     </div>
 
     <my-button
-        v-if="user.userId"
+        v-if="user.token"
         @click="logout"
         style="margin: 15px 0;"
     >
@@ -34,7 +34,7 @@
     </my-button>
 
     <my-button
-        v-if="user.userId"
+        v-if="user.token"
         @click="showDialog"
         style="margin: 15px 0;"
     >
@@ -47,7 +47,7 @@
     </my-dialog>
     <post-list
         :posts="post"
-        :userId="user.userId"
+        :userId="getUserId()"
         @update="openUpdatePost"
         v-if="!isPostLoading"
     />
@@ -79,6 +79,7 @@ import {LogUser} from "@/components/interfaces/LogUser";
 import MyButton from "@/components/UI/MyButton.vue";
 import {Profile} from "@/components/interfaces/Profile";
 import {NewPost} from "@/components/interfaces/NewPost";
+import jwt_decode from "jwt-decode";
 
 @Component({
   components: {
@@ -103,7 +104,7 @@ export default class App extends Vue {
     await usePostsStore().createPost({
       title: post.title,
       body: post.body,
-      authorId: this.user.userId,
+      authorId: this.getUserId(),
     });
     this.post = usePostsStore().posts;
     this.dialog = false;
@@ -111,9 +112,22 @@ export default class App extends Vue {
 
   openUpdatePost(post: Post) {
     this.oldPost = post;
-    if (post.userId === useUserStore().profile.userId) {
+    if (post.userId === this.getUserId()) {
       this.dialogUpdate = true;
     }
+  }
+
+  getDecodedAccessToken(token: string): any {
+    try {
+      return jwt_decode(token);
+    } catch (Error) {
+      return null;
+    }
+  }
+
+  getUserId() {
+    if (this.user.token)
+      return this.getDecodedAccessToken(this.user.token).sub;
   }
 
   async changePost(post: Post) {
@@ -130,6 +144,10 @@ export default class App extends Vue {
 
   async mounted() {
     this.isPostLoading = true;
+    const storedProfile = localStorage.getItem("userProfile");
+    if (storedProfile) {
+      this.user = JSON.parse(storedProfile);
+    }
     await usePostsStore().getListPost();
     this.post = usePostsStore().posts;
     this.isPostLoading = false;

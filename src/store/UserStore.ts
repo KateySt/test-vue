@@ -10,7 +10,7 @@ export const useUserStore = defineStore({
     id: "userStore",
     state: () =>
         ({
-            profile: {} as Profile,
+            profile: JSON.parse(localStorage.getItem("userProfile") || "{}") as Profile,
         }),
     actions: {
         async registration(user: NewUser): Promise<void> {
@@ -22,6 +22,7 @@ export const useUserStore = defineStore({
                 password: user.password
             }).then(user => {
                 this.profile = user;
+                localStorage.setItem("userProfile", JSON.stringify(user));
             }).catch((error) => {
                 console.error(error);
             });
@@ -34,12 +35,14 @@ export const useUserStore = defineStore({
                 password: user.password
             }).then(user => {
                 this.profile = user;
+                localStorage.setItem("userProfile", JSON.stringify(user));
             }).catch((error) => {
                 console.error(error);
             });
         },
         logout(): void {
             this.profile = {} as Profile;
+            localStorage.removeItem("userProfile");
         }
     },
 });
