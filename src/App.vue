@@ -76,14 +76,12 @@ import UserForm from "@/components/user/UserForm.vue";
 import UserLogForm from "@/components/user/UserLogForm.vue";
 import {NewUser} from "@/components/interfaces/NewUser";
 import {LogUser} from "@/components/interfaces/LogUser";
-import MyButton from "@/components/UI/MyButton.vue";
 import {Profile} from "@/components/interfaces/Profile";
 import {NewPost} from "@/components/interfaces/NewPost";
 import jwt_decode from "jwt-decode";
 
 @Component({
   components: {
-    MyButton,
     UserLogForm,
     UserForm,
     PostList,
