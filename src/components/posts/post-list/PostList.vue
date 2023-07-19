@@ -15,7 +15,7 @@
 </template>
 
 <script lang="ts">
-import PostItem from "./PostItem.vue";
+import PostItem from "../post-item/PostItem.vue";
 import {Component, Prop, Vue} from "vue-facing-decorator";
 
 @Component({

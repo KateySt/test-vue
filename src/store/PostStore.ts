@@ -46,11 +46,12 @@ export const usePostsStore = defineStore({
         },
         async getListPost(): Promise<void> {
             this.posts = []
-            await WS.process(SubscribePosts, null,data => {
+            await WS.process(SubscribePosts, null, data => {
                 if (!data._isComplete) {
                     this.posts.push(data);
                 }
-            }).then(requester => requester.request(100000))
+            })
+                .then(requester => requester.request(100000))
                 .catch((error) => {
                     console.error(error);
                 });

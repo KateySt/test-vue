@@ -15,7 +15,8 @@
     "rsocket-messaging": "^1.0.0-alpha.3",
     "rsocket-websocket-client": "^1.0.0-alpha.3",
     "vue": "^3.2.13",
-    "vue-facing-decorator": "^2.1.20"
+    "vue-facing-decorator": "^2.1.20",
+    "vue-tsx-support": "^3.2.0"
   },
   "devDependencies": {
     "@types/rsocket-core": "^0.0.4",

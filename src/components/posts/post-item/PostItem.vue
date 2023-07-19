@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import {Post} from '../interfaces/Post';
+import {Post} from '../../interfaces/Post';
 import {Component, Prop, Vue} from "vue-facing-decorator";
 
 @Component

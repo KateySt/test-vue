@@ -66,14 +66,14 @@
 </template>
 
 <script lang="ts">
-import PostList from "./components/posts/PostList.vue";
-import PostForm from "./components/posts/PostForm.vue";
+import PostList from "./components/posts/post-list/PostList.vue";
+import PostForm from "./components/posts/post-form/PostForm";
 import {usePostsStore} from "@/store/PostStore";
 import {useUserStore} from "@/store/UserStore";
 import {Component, Vue} from "vue-facing-decorator";
 import {Post} from "@/components/interfaces/Post";
-import UserForm from "@/components/user/UserForm.vue";
-import UserLogForm from "@/components/user/UserLogForm.vue";
+import UserForm from "@/components/user/user-form/UserForm";
+import UserLogForm from "@/components/user/user-login/UserLogForm";
 import {NewUser} from "@/components/interfaces/NewUser";
 import {LogUser} from "@/components/interfaces/LogUser";
 import {Profile} from "@/components/interfaces/Profile";
@@ -140,14 +140,18 @@ export default class App extends Vue {
     this.dialogUpdate = false;
   }
 
+  async getListPost() {
+    await usePostsStore().getListPost();
+    this.post = usePostsStore().posts;
+  }
+
   async mounted() {
     this.isPostLoading = true;
     const storedProfile = localStorage.getItem("userProfile");
     if (storedProfile) {
       this.user = JSON.parse(storedProfile);
     }
-    await usePostsStore().getListPost();
-    this.post = usePostsStore().posts;
+    await this.getListPost();
     this.isPostLoading = false;
   }
 
