@@ -1,6 +1,7 @@
 import {VNode} from "vue/dist/vue";
 import {Component, Prop, Vue} from 'vue-facing-decorator';
 import {NewUser} from "@/components/interfaces/NewUser";
+import './index.css';
 
 @Component
 export default class UserForm extends Vue {
